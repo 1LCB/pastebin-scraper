@@ -1,6 +1,14 @@
-import random, requests
+import random, requests, os, math
 from time import sleep
 from bs4 import BeautifulSoup
+
+
+""" GLOBAL VARIABELS """
+
+PASTES_LIMIT = 40  # 40 pastes for each keyword =>
+
+""" GLOBAL VARIABELS """
+
 
 with open('keywords.txt', 'r') as file:
     keywords = [i.replace("\n", "") for i in file.readlines()]
@@ -11,7 +19,7 @@ for keyword in keywords:
     keyword = keyword.replace(' ', '+')
 
     c = 0
-    for _ in range(4):  # range(4) = 40 links
+    for _ in range(math.ceil(PASTES_LIMIT / 10)):
         r = requests.get(f'https://www.google.com/search?q={keyword}+site%3Ahttps%3A%2F%2Fpastebin.com&start={c}',
                          timeout=20, headers={'User-Agent': 'Mozilla/5.0'})
 
@@ -30,7 +38,7 @@ for keyword in keywords:
 
         print(f"searching for: {original_keyword}...")
         c += 10
-        sleep(6)
+        sleep(5)
 
     if keyword == keywords[-1]:
         break
@@ -38,12 +46,16 @@ for keyword in keywords:
     print("waiting...")
     sleep(random.uniform(17, 22))
 
-txt = ""
+
+
+if not os.path.exists("results"):
+    os.mkdir("results")
+
 for k in links.keys():
-    txt += f"==> {k} <==\n\n"
+    txt = f"==> {k} <==\n\n"
     for v in links[k]:
         txt += f"{v}\n"
     txt += "\n\n"
 
-with open('pastes.txt', 'w+') as file:
-    file.write(txt)
+    with open(f'results/{k}.txt', 'w+') as file:
+        file.write(txt)
