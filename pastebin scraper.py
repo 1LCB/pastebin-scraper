@@ -21,7 +21,7 @@ for keyword in keywords:
     c = 0
     for _ in range(math.ceil(PASTES_LIMIT / 10)):
         r = requests.get(f'https://www.google.com/search?q={keyword}+site%3Ahttps%3A%2F%2Fpastebin.com&start={c}',
-                         timeout=20, headers={'User-Agent': 'Mozilla/5.0'})
+                         timeout=10, headers={'User-Agent': 'Mozilla/5.0'})
 
         site = BeautifulSoup(r.content, 'html.parser')
 
